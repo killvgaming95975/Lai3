@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meesho Account & Style Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #fce7f3; /* Light pink background */
+            background-image: radial-gradient(#fbcfe8 1px, transparent 1px);
+            background-size: 20px 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .fade-in {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Custom scrollbar for select dropdowns if needed */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #f43397; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #d92281; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden border border-pink-100 my-8">
+        
+        <div class="bg-gradient-to-br from-[#ff65a3] to-[#f43397] p-8 text-center text-white relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-32 h-32 bg-white opacity-10 rounded-full -translate-x-10 -translate-y-10"></div>
+            <div class="absolute bottom-0 right-0 w-24 h-24 bg-white opacity-10 rounded-full translate-x-5 translate-y-5"></div>
+            
+            <h1 class="text-3xl font-extrabold mb-2 tracking-wide relative z-10 flex justify-center items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+                Meesho Manager
+            </h1>
+            <p class="text-pink-100 text-sm font-medium relative z-10 opacity-90">Select Account, Copy Style & Track Quantity</p>
+        </div>
+
+        <div class="p-6 md:p-8">
+            <div class="mb-6">
+                <label for="accountSelect" class="block text-sm font-bold text-gray-700 mb-2">📦 Select Meesho Account:</label>
+                <div class="relative">
+                    <select id="accountSelect" class="w-full border-2 border-gray-200 rounded-xl px-4 py-3.5 bg-gray-50 text-gray-800 font-semibold focus:outline-none focus:border-[#f43397] focus:ring-2 focus:ring-[#ffb6d3] transition-all cursor-pointer appearance-none shadow-sm">
+                        <option value="" disabled selected>-- Choose an Account --</option>
+                        <option value="AK TRADING STORE">AK TRADING STORE</option>
+                        <option value="The_Botani_Pure">The_Botani_Pure</option>
+                        <option value="The Botani Pure">The Botani Pure</option>
+                        <option value="SahilTrading">SahilTrading</option>
+                        <option value="SRK ENTERPRISES_07">SRK ENTERPRISES_07</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-[#f43397]">
+                        <svg class="fill-current h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <div id="styleContainer" class="mb-6 hidden fade-in">
+                <label for="styleSelect" class="block text-sm font-bold text-gray-700 mb-2">🏷️ Select STYLE ID:</label>
+                <div class="relative">
+                    <select id="styleSelect" class="w-full border-2 border-gray-200 rounded-xl px-4 py-3.5 bg-gray-50 text-gray-800 font-semibold focus:outline-none focus:border-[#f43397] focus:ring-2 focus:ring-[#ffb6d3] transition-all cursor-pointer appearance-none shadow-sm">
+                        </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-[#f43397]">
+                        <svg class="fill-current h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <div id="resultContainer" class="hidden fade-in mt-6">
+                <label class="block text-sm font-bold text-gray-700 mb-2">📝 Product Details:</label>
+                <div id="resultText" class="w-full bg-[#fff0f6] border border-[#fbcce0] rounded-xl p-5 text-gray-800 font-medium text-sm leading-relaxed shadow-inner min-h-[80px] flex items-center">
+                    </div>
+                
+                <button id="copyBtn" class="mt-4 w-full bg-gradient-to-r from-[#ff65a3] to-[#f43397] hover:from-[#f43397] hover:to-[#d92281] text-white font-bold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-lg active:scale-95 transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                    </svg>
+                    <span class="text-md tracking-wide">Copy Text</span>
+                </button>
+            </div>
+
+            <hr class="border-t-2 border-pink-100 my-6 border-dashed">
+
+            <div id="trackerContainer" class="fade-in">
+                <label class="block text-sm font-bold text-gray-700 mb-3 flex justify-between items-center">
+                    <span>🛒 Quantity Tracker:</span>
+                    <span id="totalItemsBadge" class="bg-[#f43397] text-white text-xs px-2 py-1 rounded-full shadow-sm">0 Items</span>
+                </label>
+                
+                <div id="cartList" class="flex flex-col gap-3">
+                    <div class="text-center text-gray-400 text-sm italic py-4">No products selected yet...</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Data for ALL Accounts
+        const styleData = {
+            "AK TRADING STORE": [
+                { id: "new-piles-care-30c", text: "Piles Care Capsules - Ayurvedic Medicine for Piles, Fissure & Fistula | Stops Bleeding, Pain & Burning | Bavasir Ki Dawa | Fast Relief Hemorrhoids Treatment (30 Caps)" },
+                { id: "HERBA-KETO-30", text: "HerbaKeto Advanced Weight Loss Formula 100% natural weight loss formula with green coffee 30 capsule" },
+                { id: "uEP9wrfT", text: "Botani Pure Ashwagandha 30 Capsules – Natural Stress Relief, Boosts Energy, Enhances Immunity, Supports Mental Clarity, Improves Sleep Quality, & Promotes Overall Wellness for Daily Vitality & Balance" },
+                { id: "iIQkgBqN", text: "Botani Pure Keto Advance Weight Loss Formula – 100% Natural Herbal Slimming Supplement with Green Coffee Extract – Supports Fat Burning, Boosts Energy, Controls Appetite, Improves Fat Metabolism & Aids Ketogenic Diet – 30 Capsules" },
+                { id: "oC_QOb1u", text: "X Power Gold Capsule 30 – Herbal Capsules for Men's Vitality, Stamina, Energy & Performance Boost" },
+                { id: "2NRTIUbs", text: "Botani Pure Combo 2x X Power Gold Capsule 30 (500mg) with 2x X Power Gold Oil-Free 30ml" },
+                { id: "WoMu_JuZ", text: "Botani Pure Milk Thistle Capsules – 30 Veg Capsules for Daily Wellness, Herbal Liver Tonic to Support Healthy Liver Function, Detox & Cleansing, Improves Digestion, Boosts Immunity & Promotes Overall Health Naturally" },
+                { id: "qGeUB-AD", text: "Botani Pure Sugar Control Capsules – 60 Veg Capsules for Healthy Blood Sugar Management, Supports Glucose Metabolism, Promotes Balanced Energy, Herbal Supplement for Diabetes Care & Overall Wellness" },
+                { id: "big15OKY", text: "Botani Pure Piles Care Capsules – 30 Veg Capsules for Relief from Hemorrhoids, Helps Stop Bleeding, Shrinks Lumps, Reduces Pain & Discomfort, Natural Herbal Supplement for Piles Treatment & Digestive Health" },
+                { id: "kR0xYqwB", text: "Botani Pure Liver Care Capsules – 30 Veg Capsules for Ayurvedic Herbal Liver Detox & Support, Promotes Healthy Liver Function, Improves Digestion, Aids Body Cleansing, Boosts Immunity & Overall Wellness Naturally" }
+            ],
+            "The_Botani_Pure": [
+                { id: "new-piles-care-30c", text: "Piles Care Capsules - Ayurvedic Medicine for Piles, Fissure & Fistula | Stops Bleeding, Pain & Burning | Bavasir Ki Dawa | Fast Relief Hemorrhoids Treatment (30 Caps)" },
+                { id: "E58oZ8ba", text: "Men's Ayurvedic | X-Extra Herbal Performance Oil for Strength & Timing | 30ml" },
+                { id: "5LzGbsJU", text: "Herbal Keshraj Hair Oil Spray for Hair Growth & Baldness Control (30ml)" },
+                { id: "herba_keto_30c", text: "HerbaKeto Advanced Weight Loss Formula | 100% Natural Slimming Supplement with Green Coffee | 30 Capsules for Metabolism & Fat Burn" },
+                { id: "qpJ2b4pF", text: "R Power Gold Capsules for Men (30 Count) | Improve Stamina, Strength & Timing | Herbal Male Energy Booster" },
+                { id: "4H7A2j2-", text: "Botani Pure Piles Care 30 Capsules | Stops Bleeding, Reduces Pain & Lumps | Ayurvedic Relief" },
+                { id: "g5j_2seM", text: "Botani Pure Breast Enhancement Capsules | Natural Bust Size Gain | 30 Herbal Capsules for Women" },
+                { id: "IAKC-Wru", text: "Botani Pure Sugar Control Capsules (30 Caps) – Supports Healthy Blood Sugar & Wellness" },
+                { id: "usvXXPJ4", text: "Botani Pure Liver Care Ayurvedic Capsules – Natural Detox & Liver Health Supplement (30 Capsules)" },
+                { id: "DLVcia0O", text: "Botani Pure Ashwagandha Capsules – Natural Stress Relief, Energy & Immunity Booster (30 Veg Capsules)" },
+                { id: "2CEU9TBZ", text: "X Power Gold Capsule 30 – Herbal Capsule for Men's Vitality & Strength" },
+                { id: "CWEP7ap1", text: "Botani Pure Keto Advance Weight Loss Formula – 30 Capsules | Natural Fat Burner | Slimming & Energy Support" },
+                { id: "S_ugF64G", text: "X Power Gold Oil 30ml – Herbal Massagee Oil for Men's Vitality & Strength" }
+            ],
+            "The Botani Pure": [
+                { id: "UEUwjaIh", text: "Milk Thistle Seed Extract 30 Capsules – Liver Detox & Health Support" },
+                { id: "wuq_rNqN", text: "BOTANI PURE PILES CARE CAPSULE STOPS BLEEDING REMOVE LUMPS REDUCE PAIN" },
+                { id: "G7ujivlh", text: "Botani Pure Keto Advance Capsules – 100% Natural Weight Loss Formula" },
+                { id: "kfwwgi9X", text: "X Power Gold Oil 30ml – Herbal Massagee Oil for Men's Vitality & Strength" },
+                { id: "nyh2Wxuz", text: "Botani Pure Ayurvedic Sugar Control capsule 30" },
+                { id: "UtZLiyGN", text: "Botani Pure Ayurvedic Liver support capsule 30" },
+                { id: "X-GOLD-OIL-30ML", text: "X Power Gold Oil 30ml Gold Edition for Men – Advanced Herbal Boost Formula to Improve, Increase Strength, Enhance Energy Levels, Support Long-Lasting & Confidence with Regular Use" },
+                { id: "HERBA-KETO-30C", text: "HerbaKeto Advanced Weight Loss Formula 100% natural weight loss formula with green coffee 30 capsule" }
+            ],
+            "SahilTrading": [
+                { id: "PA3OZHjk", text: "Milk Thistle Seed Extract 30 capsules" },
+                { id: "PLqaJ8oU", text: "Botani Pure Liver Care Capsules – 30 Veg Capsules for Healthy Liver Support" },
+                { id: "n5dNiOag", text: "Piles Care 30 capsules Stops Bleeding Remove Lumps Reduce pain" },
+                { id: "TKcf1Gge", text: "Botani Pure Keto Capsules with Green Coffee – Advanced Weight Loss Formula, 30 Caps" },
+                { id: "oUMjVY9V", text: "Botani Pure Sugar Control 30 Capsules 100% Natural" },
+                { id: "wv3n86xm", text: "Botani Pure Ashwagandha Capsules – 30 Veg Capsules for Stress & Energy" },
+                { id: "Z9qOo310", text: "X Power Gold Oil 30ml – Herbal Massagee Oil for Men's Vitality & Strength" },
+                { id: "wIHJCZvn", text: "X Power Gold Capsules for Men – 30 Caps for Strength, Energy & Stamina" },
+                { id: "R_POWER_GOLD_30", text: "R-Power Gold Capsules (30) for Men | Performance Booster | Increases Stamina, Strength & Timing | Natural Energy Support" },
+                { id: "herba_keto_30", text: "HerbaKeto Advanced Weight Loss Formula | 100% Natural Slimming Supplement with Green Coffee | 30 Capsules for Metabolism & Fat Burn" },
+                { id: "OOw8hZG6", text: "Kama Sutra Gold Ayurvedic Capsules for Men | Strength & Timing Support | Men" },
+                { id: "ZcB4Pmg8", text: "X-TRA Gold Power Capsule for Men | Ayurvedic & Strength Booster (30 Capsules)" },
+                { id: "1h6_qaxZ", text: "Night Life Gold Capsule for Men | Ayurvedic & Strength Booster | With Ashwagandha, Shilajit & Safed Musli | 30 capsule" },
+                { id: "rb5fe7_Y", text: "Men Power Gold Capsule for Men | Ayurvedic & Strength Support | With Ashwagandha, Shilajit & Safed Musli (30 Capsules)" }
+            ],
+            "SRK ENTERPRISES_07": [
+                { id: "rb5fe7_Y", text: "Men Power Gold Capsule for Men | Ayurvedic & Strength Support | With Ashwagandha, Shilajit & Safed Musli (30 Capsules)" },
+                { id: "biFxJKM-", text: "X Power Life Capsule for Men | & Strength Support | 30 Capsules" },
+                { id: "T7S3lKyd", text: "X-TRA Gold Power Capsule for Male | Boost , Strength & Timing | Ayurvedic Formula | 30 capsule" },
+                { id: "Zh4R-Xbd", text: "Kama Sutra Gold Ayurvedic Capsules for Men | Strength & Timing Support | Men" },
+                { id: "YEAH9jkL", text: "X-Extra for Men | Ayurvedic Herbal Oil for Stamina, Strength & Performance | 30ml" },
+                { id: "PqAUM5Ut", text: "Ayurvedic Keshraj Hair Oil with Rosemary for Hair Regrowth – 30ml" },
+                { id: "gD8HGmM9", text: "R-Power Gold Capsules (30) for Men | Performance Booster | Increases Stamina, Strength & Timing | Natural Energy Support" },
+                { id: "hF0r7nYC", text: "Botani Pure Liver Support - Natural Ayurvedic Liver Health Supplement, 30 Caps" },
+                { id: "sECQO3yD", text: "Botani Pure Keto Nutrition- Weight Management Ayurvedic Supplement (30 Capsule) Body Fit & Slim For Men's -Women Fat Reduce Weight Loss" },
+                { id: "BBxQKRU4", text: "Botani Pure Ashwagandha Herbal Capsules | Stress, Sleep & Immunity Support | 30 Capsules" },
+                { id: "qaa0vqCy", text: "Botani Pure Milk Thistle Seed Extract - 30 Capsules for Liver Support & Liver Health" },
+                { id: "lqNALuya", text: "Botani Pure Sugar Control 30 Capsules - Healthy Blood Sugar Support Supplement" },
+                { id: "-zbegAD6", text: "Botani Pure Piles Care 30 Capsules – Stops Bleeding, Pain Relief, Lump Removal" },
+                { id: "ehXQSwDk", text: "Botanipure Piles Care Ayurvedic Relief for Bleeding, Pain & Lumps 30x1 Capsules" }
+            ]
+        };
+
+        // State for Quantities
+        let cartState = {};
+
+        // DOM Elements
+        const accountSelect = document.getElementById('accountSelect');
+        const styleContainer = document.getElementById('styleContainer');
+        const styleSelect = document.getElementById('styleSelect');
+        const resultContainer = document.getElementById('resultContainer');
+        const resultText = document.getElementById('resultText');
+        const copyBtn = document.getElementById('copyBtn');
+        const cartList = document.getElementById('cartList');
+        const totalItemsBadge = document.getElementById('totalItemsBadge');
+
+        // SVG Icons
+        const copyIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>`;
+        const successIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>`;
+
+        // Smart Function: Ekdam Sahi Logic (Keto & HerbaKeto Fixed)
+        function getShortProductName(fullText) {
+            const text = fullText.toLowerCase();
+            
+            // Keto and HerbaKeto Fix
+            if (text.includes('herbaketo') || text.includes('herba-keto') || text.includes('herba keto')) {
+                return "HerbaKeto (30 Caps)";
+            }
+            if (text.includes('keto')) {
+                return "Botani Pure Keto (30 Caps)";
+            }
+
+            // General Products
+            if (text.includes('combo') && text.includes('gold')) return "Combo: Gold Caps + Oil";
+            if (text.includes('piles')) return "Piles Care (30 Caps)";
+            if (text.includes('ashwagandha')) return "Ashwagandha (30 Caps)";
+            if (text.includes('milk thistle')) return "Milk Thistle (30 Caps)";
+            if (text.includes('sugar control')) return "Sugar Control (30 Caps)";
+            if (text.includes('liver')) return "Liver Care (30 Caps)";
+            if (text.includes('breast')) return "Breast Enhance (30 Caps)";
+            if (text.includes('keshraj') || text.includes('hair oil')) return "Keshraj Hair Oil (30ml)";
+            
+            // Oils
+            if (text.includes('oil') && text.includes('x power gold')) return "X Power Gold Oil (30ml)";
+            if (text.includes('oil') && text.includes('x-extra')) return "X-Extra Power Oil (30ml)";
+
+            // SPECIFIC Men's Capsules
+            if (text.includes('x power gold capsule') || text.includes('x power gold capsule 30')) return "X Power Gold Capsule (30 Caps)";
+            if (text.includes('men power gold capsule')) return "Men Power Gold Capsule (30 Caps)";
+            if (text.includes('r-power') || text.includes('r power')) return "R-Power Gold Capsule (30 Caps)";
+            if (text.includes('kama sutra')) return "Kama Sutra Gold (30 Caps)";
+            if (text.includes('night life')) return "Night Life Gold (30 Caps)";
+            if (text.includes('x-tra gold') || text.includes('x-tra power')) return "X-TRA Gold Power (30 Caps)";
+            if (text.includes('x power life')) return "X Power Life Capsule (30 Caps)";
+            
+            // Fallback for any missed men's capsule
+            if (text.includes('capsule') && (text.includes('gold') || text.includes('power') || text.includes('men'))) return "Other Men's Power Caps";
+            
+            return "Other Product";
+        }
+
+        function resetCopyBtn() {
+            copyBtn.innerHTML = `${copyIcon} <span class="text-md tracking-wide">Copy Text</span>`;
+            copyBtn.className = "mt-4 w-full bg-gradient-to-r from-[#ff65a3] to-[#f43397] hover:from-[#f43397] hover:to-[#d92281] text-white font-bold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-lg active:scale-95 transform";
+        }
+
+        function renderCart() {
+            cartList.innerHTML = '';
+            let totalTypes = Object.keys(cartState).length;
+            totalItemsBadge.innerText = `${totalTypes} Items`;
+
+            if (totalTypes === 0) {
+                cartList.innerHTML = '<div class="text-center text-gray-400 text-sm italic py-4">No products selected yet...</div>';
+                return;
+            }
+
+            for (let shortName in cartState) {
+                let qty = cartState[shortName];
+                let safeName = shortName.replace(/'/g, "\\'"); 
+
+                let itemHTML = `
+                <div class="flex justify-between items-center bg-[#fffafa] border border-pink-200 p-3 rounded-xl shadow-sm hover:shadow-md transition-all fade-in">
+                    <span class="font-extrabold text-gray-700 text-sm truncate pr-2 w-[55%]" title="${shortName}">📦 ${shortName}</span>
+                    <div class="flex items-center gap-1.5 w-[45%] justify-end">
+                        <button onclick="updateQty('${safeName}', -1)" class="w-8 h-8 flex items-center justify-center bg-pink-100 text-pink-600 rounded-full hover:bg-pink-200 font-extrabold shadow-sm active:scale-90 transition-all">-</button>
+                        <span class="font-extrabold w-6 text-center text-gray-900 text-md">${qty}</span>
+                        <button onclick="updateQty('${safeName}', 1)" class="w-8 h-8 flex items-center justify-center bg-pink-500 text-white rounded-full hover:bg-pink-600 font-extrabold shadow-sm active:scale-90 transition-all">+</button>
+                        
+                        <button onclick="deleteItem('${safeName}')" class="w-8 h-8 flex items-center justify-center bg-red-50 text-red-500 rounded-full hover:bg-red-500 hover:text-white font-bold ml-1 shadow-sm active:scale-90 transition-colors duration-200" title="Delete Item">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>`;
+                
+                cartList.innerHTML += itemHTML;
+            }
+        }
+
+        window.updateQty = function(name, change) {
+            if (cartState[name]) {
+                cartState[name] += change;
+                if (cartState[name] <= 0) {
+                    delete cartState[name];
+                }
+                renderCart();
+            }
+        }
+
+        window.deleteItem = function(name) {
+            delete cartState[name];
+            renderCart();
+        }
+
+        accountSelect.addEventListener('change', function() {
+            const selectedAccount = this.value;
+            styleSelect.innerHTML = '<option value="" disabled selected>-- Choose a Style ID --</option>';
+            resultContainer.classList.add('hidden');
+            
+            if (styleData[selectedAccount] && styleData[selectedAccount].length > 0) {
+                styleData[selectedAccount].forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.id;
+                    option.textContent = item.id;
+                    styleSelect.appendChild(option);
+                });
+                styleContainer.classList.remove('hidden');
+            } else {
+                styleContainer.classList.add('hidden');
+            }
+        });
+
+        styleSelect.addEventListener('change', function() {
+            const selectedAccount = accountSelect.value;
+            const selectedStyleId = this.value;
+            
+            const selectedItem = styleData[selectedAccount].find(item => item.id === selectedStyleId);
+            
+            if (selectedItem) {
+                resultText.textContent = selectedItem.text;
+                resultContainer.classList.remove('hidden');
+                resetCopyBtn();
+
+                const shortProductName = getShortProductName(selectedItem.text);
+                
+                if (cartState[shortProductName]) {
+                    cartState[shortProductName] += 1;
+                } else {
+                    cartState[shortProductName] = 1;
+                }
+                renderCart();
+            }
+        });
+
+        copyBtn.addEventListener('click', function() {
+            const textToCopy = resultText.textContent;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = textToCopy;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            
+            try {
+                document.execCommand('copy');
+                copyBtn.innerHTML = `${successIcon} <span class="text-md tracking-wide">Copied Successfully!</span>`;
+                copyBtn.className = "mt-4 w-full bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-bold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-md active:scale-95 transform";
+                
+                setTimeout(() => { resetCopyBtn(); }, 2000);
+            } catch (err) {
+                console.error('Failed to copy text', err);
+            }
+            document.body.removeChild(tempTextArea);
+        });
+
+    </script>
+</body>
+</html>
